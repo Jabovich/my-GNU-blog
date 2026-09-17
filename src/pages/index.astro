@@ -1,11 +1,25 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Мой блог</title>
+  </head>
+  <body>
+    <h1>Мой блог</h1>
+    <ul>
+      {posts.map((post) => (
+        <li>
+          <a href={`/my-GNU-blog/blog/${post.slug}/`}>{post.data.title}</a>
+          <p>{post.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>
